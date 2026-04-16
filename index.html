@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Red!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ffd4eb 0%, #e5d4ff 50%, #ffc4e1 100%);
+            color: #5a3e5f;
+            overflow: auto;
+            min-height: 100vh;
+        }
+
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            opacity: 0;
+            overflow-y: auto;
+        }
+
+        .page.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        /* HOMEPAGE */
+        #homepage {
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 40px 20px;
+            overflow-y: auto;
+            min-height: 100vh;
+        }
+
+        #homepageContent {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .birthday-text {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+        }
+
+        #cakeGif {
+            max-width: 350px;
+            width: 80%;
+            height: auto;
+            margin-bottom: 30px;
+        }
+
+        .ready-text {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            color: #9b59b6;
+            margin-bottom: 30px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .yes-btn {
+            font-size: 1.5rem;
+            padding: 18px 60px;
+            background: linear-gradient(135deg, #ff69b4, #9b59b6);
+            border: none;
+            border-radius: 50px;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.4);
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            margin-bottom: 60px;
+            display: none;
+        }
+
+        .yes-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 105, 180, 0.6);
+        }
+
+        /* CHOICE SECTION */
+        #choiceSection {
+            width: 100%;
+            display: none;
+        }
+
+        .choice-title {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            margin-bottom: 40px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff69b4, #9b59b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .letters-grid,
+        .gifts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .section-subtitle {
+            font-size: clamp(1rem, 3vw, 1.4rem);
+            color: #9b59b6;
+            margin: 25px 0 15px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .letter-card,
+        .gift-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border: 3px solid rgba(255, 255, 255, 0.5);
+            border-radius: 25px;
+            padding: 18px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            min-height: 170px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .letter-card:hover,
+        .gift-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(255, 105, 180, 0.25);
+        }
+
+        .letter-icon,
+        .gift-image {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+        }
+
+        .gift-image {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 18px;
+            margin-bottom: 15px;
+        }
+
+        .letter-title,
+        .gift-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #5a3e5f;
+        }
+
+        .letter-preview {
+            font-size: 0.95rem;
+            color: #8a6e8f;
+            line-height: 1.6;
+        }
+
+        /* GRID PAGE */
+        .grid-page {
+            height: 100vh;
+            overflow-y: auto;
+            flex-direction: column;
+        }
+
+        .grid-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 212, 235, 0.8);
+            backdrop-filter: blur(15px);
+        }
+
+        .grid-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff69b4, #9b59b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .back-btn {
+            font-size: 1rem;
+            padding: 10px 25px;
+            background: rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 50px;
+            color: #5a3e5f;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .grid-card {
+            aspect-ratio: 1;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 3px solid rgba(255, 255, 255, 0.4);
+            border-radius: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .grid-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 12px 30px rgba(255, 105, 180, 0.3);
+            border-color: #ff69b4;
+        }
+
+        .card-icon, .card-emoji {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #5a3e5f;
+        }
+
+        .card-preview {
+            font-size: 0.85rem;
+            color: #8a6e8f;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        /* GIFT DETAIL PAGE (Full Screen) */
+        .detail-page {
+            height: 100vh;
+            overflow-y: auto;
+            flex-direction: column;
+            background: linear-gradient(135deg, #fff0f8 0%, #f8f0ff 100%);
+            padding: 0;
+        }
+
+        .detail-content {
+            max-width: 100%;
+            margin: 0 auto;
+            padding-bottom: 100px;
+        }
+
+        .detail-image {
+            width: 100%;
+            max-width: 95%;
+            height: auto;
+            display: block;
+            margin: 50px auto;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(255, 105, 180, 0.2);
+        }
+
+        #giftPage1 .detail-image {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+
+        #giftPage1 .detail-content,
+        #giftPage2 .detail-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bottom-next-btn {
+            position: fixed;
+            bottom: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.2rem;
+            padding: 15px 50px;
+            background: linear-gradient(135deg, #ff69b4, #9b59b6);
+            border: none;
+            border-radius: 50px;
+            color: #fff;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(255, 105, 180, 0.4);
+            z-index: 100;
+        }
+
+        .bottom-next-btn:hover {
+            transform: translateX(-50%) translateY(-3px) scale(1.05);
+        }
+
+        /* LETTER MODAL */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #fff5fb, #fef5ff);
+            border-radius: 30px;
+            padding: 50px;
+            max-width: 700px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 105, 180, 0.2);
+            border: 2px solid rgba(255, 105, 180, 0.4);
+            color: #5a3e5f;
+            font-size: 1.5rem;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 105, 180, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #ff69b4, #9b59b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .modal-text {
+            font-size: 1.15rem;
+            line-height: 2;
+            color: #1a0f1d;
+            font-weight: 400;
+        }
+
+        .modal-text p {
+            margin-bottom: 15px;
+        }
+
+        /* ANIMATIONS */
+        .fade-out {
+            animation: fadeOut 0.6s ease-out forwards;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        /* MOBILE */
+        @media (max-width: 768px) {
+            #cakeGif { max-width: 280px; }
+            .birthday-text { font-size: clamp(2rem, 8vw, 3.5rem); }
+            .ready-text { font-size: clamp(1.2rem, 5vw, 2rem); }
+            .yes-btn { 
+                font-size: 1.2rem; 
+                padding: 15px 45px; 
+            }
+            .scattered-images {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+                max-width: 400px;
+            }
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 15px;
+                padding: 20px;
+            }
+            .modal-content {
+                padding: 40px 30px;
+                max-width: 92%;
+            }
+            .modal-title { font-size: 1.8rem; }
+            .modal-text { font-size: 1.15rem; line-height: 2.1; }
+            .close-btn { width: 50px; height: 50px; font-size: 1.7rem; }
+        }
+
+        @media (max-width: 480px) {
+            .grid { grid-template-columns: repeat(2, 1fr); }
+            .scattered-images { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <!-- HOMEPAGE -->
+    <div class="page active" id="homepage">
+        <div id="homepageContent">
+            <div class="birthday-text">Happy Birthday!</div>
+            <img id="cakeGif" src="gif1.gif" alt="Birthday Cake">
+            <div class="ready-text" id="readyText">Are you ready for surprise?</div>
+            <button class="yes-btn" id="yesBtn" onclick="showChoices()">Yes</button>
+            
+            <!-- Choice section -->
+            <div id="choiceSection">
+                <h2 class="choice-title">Open whatever</h2>
+                <div class="letters-grid" id="lettersGrid"></div>
+                <div class="section-subtitle">Open a gift</div>
+                <div class="gifts-grid" id="giftsOpenGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GIFTS GRID PAGE -->
+    <div class="page grid-page" id="giftsPage">
+        <div class="grid-header">
+            <button class="back-btn" onclick="goBackToHome()">← Back</button>
+            <h2 class="grid-title">🎁 Gifts</h2>
+            <div style="width: 80px;"></div>
+        </div>
+        <div class="grid" id="giftsGrid"></div>
+    </div>
+
+    <!-- LETTER MODAL -->
+    <div class="modal" id="letterModal" onclick="closeLetterModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="close-btn" onclick="closeLetterModal()">✕</button>
+            <div id="letterModalContent"></div>
+        </div>
+    </div>
+
+    <!-- GIFT PAGES -->
+    <div class="page detail-page" id="giftPage1">
+        <div class="detail-content" id="giftContent1"></div>
+        <button class="bottom-next-btn" onclick="showPage('homepage')">Back</button>
+    </div>
+    <div class="page detail-page" id="giftPage2">
+        <div class="detail-content" id="giftContent2"></div>
+        <button class="bottom-next-btn" onclick="showPage('homepage')">Back</button>
+    </div>
+
+    <script>
+        const CONTENT = {
+
+            letters: [
+                {
+                    id: 1,
+                    title: "Eto Muna",
+                    preview: "First",
+                    content: "Hello Mizz, this is the first letter so sana eto talaga una mong binuksan... And now, you might be wondering how these all works, simple lang naman dba? I think gets mo na nga eh, tbh, just click whatever, read whenever, and overall, just take your time. You have all the time in the world, and don't waste it reading all this in one sitting. Although pede naman, birthday mo naman kasi today eh, kaya sure ako busy ka and marami gagawin... Probably kawawa if kakausapin ng maraming tao and puro thank you sa mga bati HWHAHAHAHAHAHAAHA pero anyways, happy reading teh, have funnn!!!"
+                },
+                {
+                    id: 2,
+                    title: "Secret",
+                    preview: "Second",
+                    content: "Hello Maize, how are you po? Finee? Okayy? Happy? Sadd? No matter what you're feeling right now, i just hope it is positive. Now atee, if you ever feel down or something, I am here po. This is me, Your prince in shinning armor will help you in times of trouble (joke lang, cringe nga eh) hHWWAJHFAHFHAPIFANWAHAHAHAHAHAHAH AYOKO NAA HAHAHHAHAAHAHAHAHHAHAHAHAHAHAHAH"
+                },
+                {
+                    id: 3,
+                    title: "Secret",
+                    preview: "Third",
+                    content: "Ate, I want you to know na I am available whenever and wherever... Even if i cant help sa personal, I am always present sa chats. And ate, be free to give me a call, I assure you, if you need it, I will answer it."
+                },
+                {
+                    id: 4,
+                    title: "Secret",
+                    preview: "Fourth",
+                    content: "Ate, I hope you know na kakampi moko sa lahat. Feel free to talk to me about anything po, i love hearing your rants. If you need help, I'll try. If you just need an ear, mine's all yours. "
+                },
+                {
+                    id: 5,
+                    title: "Secret",
+                    preview: "Fifth",
+                    content: " I thank you teh sa all kinds of PIECE na binibigay mo sakin. The piece of mind where just being with you allows me to be more calm and stable... The piece which brings comfort and joy, and the chaotic piece na nagbibigay ng thrill sa buhay ko in a good way and allowing me narin to enjoy things in other ways."
+                },
+                {
+                    id: 6,
+                    title: "Secret",
+                    preview: "Sixth",
+                    content: "For all the horror and gaming nights na nakasama kita teh, yung mga laro na tila di magtatapos and inaabot ng 3am, thank you teh. Thank you po sa pagsama sakin sa takot and saya while we yap about all sorts of things sa chat and overall just enjoying every chaos and laughter."
+                },
+                {
+                    id: 7,
+                    title: "Secret",
+                    preview: "Seventh",
+                    content: "HWHSAHAHAHAHAHAHAHAHHAHAHAHAHAHAHAHAHA Thank you na rin teh sa pag-sama sakin sa SLIGHT na kasamaan like paghagis ng baby sa bubong and pagluto nyan, thank you teh. Ang sama nating dalawa<3333"
+                },
+                {
+                    id: 8,
+                    title: "Secret",
+                    preview: "Eighth",
+                    content: " And finally, Thank you teh for opening my eyes and letting me explore the games I haven't tried yet. Until now, i cant believe na mag-eenjoy me sa mga ganyan. I thought na talagang competitive games lang me mag eenjoy and sasaya. Super unique talaga for me yung thrill sa mga laro natin. Thank you thank you talaga teh sa pagsama sakin mag explore ng mga games na unique sakin. I am looking forward to when we can play more."
+                },
+                {
+                    id: 9,
+                    title: "Secret",
+                    preview: "Ninth",
+                    content: "Actually, 'di lang sa games, but also in other things. I am really thankful for you teh for opening my eyes to in super deep knowldege na talagang nagbago sakin overall. Thanks to you, I'm seeing the world better, and sometimes, even myself. Kaya thank you po for being you. Enjoy your day, May your day be full of love and joy. Pisss"
+                }
+            ],
+            
+            gifts: [
+                {
+                    id: 1,
+                    title: "Gift 1",
+                    emoji: "🎁",
+                    images: ['giff1.gif']
+                },
+                {
+                    id: 2,
+                    title: "Gift 2",
+                    emoji: "🎁",
+                    images: ['giff2.gif']
+                }
+            ]
+        };
+
+        window.onload = function() {
+            setTimeout(() => {
+                transitionToQuestion();
+            }, 4000);
+        };
+
+        function transitionToQuestion() {
+            const cakeGif = document.getElementById('cakeGif');
+            const birthdayText = document.querySelector('.birthday-text');
+            const readyText = document.getElementById('readyText');
+            const yesBtn = document.getElementById('yesBtn');
+            
+            // Fade out gif and birthday text
+            cakeGif.classList.add('fade-out');
+            birthdayText.classList.add('fade-out');
+            
+            setTimeout(() => {
+                cakeGif.style.display = 'none';
+                birthdayText.style.display = 'none';
+                
+                // Show question and button
+                readyText.style.display = 'block';
+                yesBtn.style.display = 'block';
+                readyText.classList.add('fade-in');
+                yesBtn.classList.add('fade-in');
+            }, 600);
+        }
+
+        function showChoices() {
+            const choiceSection = document.getElementById('choiceSection');
+            const yesBtn = document.getElementById('yesBtn');
+            const readyText = document.getElementById('readyText');
+            
+            // Fade out question elements
+            yesBtn.classList.add('fade-out');
+            readyText.classList.add('fade-out');
+            
+            setTimeout(() => {
+                yesBtn.style.display = 'none';
+                readyText.style.display = 'none';
+                
+                // Show clickable images
+                choiceSection.style.display = 'block';
+                choiceSection.classList.add('fade-in');
+            }, 600);
+        }
+
+        function goBackToHome() {
+            showPage('homepage');
+        }
+
+        function showPage(pageId) {
+            const allPages = document.querySelectorAll('.page');
+            const targetPage = document.getElementById(pageId);
+            
+            allPages.forEach(page => {
+                if (page.classList.contains('active')) {
+                    page.classList.add('fade-out');
+                    setTimeout(() => {
+                        page.classList.remove('active', 'fade-out');
+                    }, 400);
+                }
+            });
+            
+            setTimeout(() => {
+                targetPage.classList.add('active', 'fade-in');
+                setTimeout(() => {
+                    targetPage.classList.remove('fade-in');
+                }, 400);
+            }, 400);
+        }
+
+        function renderLettersGrid() {
+            const grid = document.getElementById('lettersGrid');
+            grid.innerHTML = CONTENT.letters.map(letter => `
+                <div class="letter-card" onclick="openLetter(${letter.id})">
+                    <div class="letter-icon">✉️</div>
+                    <div class="letter-title">${letter.title}</div>
+                    <div class="letter-preview">${letter.preview}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderOpenGifts() {
+            const grid = document.getElementById('giftsOpenGrid');
+            grid.innerHTML = CONTENT.gifts.map(gift => `
+                <div class="gift-card" onclick="openGift(${gift.id})">
+                    <img src="img1.jpg" alt="Gift ${gift.id}" class="gift-image">
+                    <div class="gift-title">${gift.title}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderGiftsGrid() {
+            const grid = document.getElementById('giftsGrid');
+            const giftsHTML = CONTENT.gifts.map(gift => `
+                <div class="grid-card" onclick="openGift(${gift.id})">
+                    <div class="card-emoji">${gift.emoji}</div>
+                    <div class="card-title">${gift.title}</div>
+                </div>
+            `).join('');
+            grid.innerHTML = giftsHTML;
+        }
+
+        function openLetter(id) {
+            const letter = CONTENT.letters.find(l => l.id === id);
+            const content = document.getElementById('letterModalContent');
+            const paragraphs = letter.content.split('\n').filter(p => p.trim()).map(p => `<p>${p}</p>`).join('');
+            
+            content.innerHTML = `
+                <h3 class="modal-title">${letter.title}</h3>
+                <div class="modal-text">${paragraphs}</div>
+            `;
+            
+            document.getElementById('letterModal').classList.add('active');
+        }
+
+        function closeLetterModal(event) {
+            if (!event || event.target.id === 'letterModal' || event.target.classList.contains('close-btn')) {
+                document.getElementById('letterModal').classList.remove('active');
+            }
+        }
+
+        function openGift(id) {
+            const gift = CONTENT.gifts.find(g => g.id === id);
+            const content = document.getElementById(`giftContent${id}`);
+            
+            const images = gift.images && gift.images.length > 0
+                ? gift.images.map(img => `<img src="${img}" alt="Gift" class="detail-image">`).join('')
+                : '';
+            
+            const centerClass = (id === 1 || id === 2) ? 'centered-gift' : '';
+            
+            content.innerHTML = `
+                <h2 class="grid-title ${centerClass}">${gift.title}</h2>
+                ${images}
+            `;
+            
+            showPage(`giftPage${id}`);
+        }
+
+        renderLettersGrid();
+        renderOpenGifts();
+        renderGiftsGrid();
+    </script>
+</body>
+</html>
